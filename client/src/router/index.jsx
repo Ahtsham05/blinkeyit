@@ -19,6 +19,7 @@ import ProductListPage from "../pages/ProductListPage"
 import ProductDisplayPage from "../pages/ProductDisplayPage"
 import MobileCart from "../pages/MobileCart"
 import CheckoutPage from "../pages/CheckoutPage"
+import Address from "../pages/Address"
 
 const router = createBrowserRouter([
     {
@@ -88,6 +89,10 @@ const router = createBrowserRouter([
                         element:<AdminPage>
                                     <AdminProduct/>
                                 </AdminPage>
+                    },
+                    {
+                        path:"address",
+                        element:<Address/>
                     }
                 ]
             },

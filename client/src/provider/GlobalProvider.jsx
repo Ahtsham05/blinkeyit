@@ -4,6 +4,7 @@ import { addToCartStore } from "../store/cartSlice";
 import Axios from "../utils/Axios";
 import summery from "../common/summery";
 import DiscountConverter from "../utils/DiscountConverter";
+import { addAddress } from "../store/addressSlice";
 
 export const GlobalContext = createContext(null);
 
@@ -67,8 +68,23 @@ export const GlobalProvider = ({ children }) => {
     }
   };
 
+  const fetchAddress = async ()=>{
+    try {
+      const response = await Axios({
+        ...summery.getAddress
+      })
+      const { data : responseData } = response
+      if(responseData?.success){
+        dispatch(addAddress(responseData?.data))
+      }
+    } catch (error) {
+      console.log('Error fetching address: ',error)
+    }
+  }
+
   useEffect(() => {
     fetchCartItems();
+    fetchAddress();
   }, []);
 
   useEffect(()=>{
@@ -98,7 +114,8 @@ export const GlobalProvider = ({ children }) => {
         deleteCartItem,
         totalPrice,
         totalQty,
-        notDicountedPrice
+        notDicountedPrice,
+        fetchAddress
       }}
     >
       {children}

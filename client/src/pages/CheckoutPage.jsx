@@ -5,6 +5,8 @@ import { currencyConverter } from "../utils/currencyConverter";
 import AddAddress from "../components/AddAddress";
 
 const CheckoutPage = () => {
+  const addressStore = useSelector(state => state?.address?.addresses)
+
   const { totalPrice, totalQty, notDicountedPrice } = useGlobalContext();
   const [openAddressPage, setOpenAddressPage] = useState(false);
   return (
@@ -12,13 +14,35 @@ const CheckoutPage = () => {
       <div className="container mx-auto grid grid-cols-1 lg:grid-cols-2 gap-4">
         <div>
           <h1 className="font-semibold">Choose your address</h1>
-          <div className="bg-white p-2">
+          <div className="bg-white p-2 grid gap-2">
+            {
+              addressStore?.map((address,index)=>(
+                <label key={"addressCheckouPage"+index} htmlFor={'confirmBox'+index} className="border py-2 px-4 text-sm">
+                  <div className="flex items-start">
+                    {
+                      index === 0 ? (
+                        <input type="radio" id={'confirmBox'+index} name="confirmAddress" className="mt-1" defaultChecked/>
+                      ):(
+                        <input type="radio" id={'confirmBox'+index} name="confirmAddress" className="mt-1"/>
+                      )
+                    }
+                    <div  className="w-full px-2">
+                      <h1>{address?.addressLine}</h1>
+                      <p>{address?.city} - {address?.pincode}</p>
+                      <p>{address?.state}</p>
+                      <p>{address?.country}</p>
+                      <p>{address?.mobile}</p>
+                    </div>
+                  </div>
+                </label>
+              ))
+            }
             <div className="border-dashed border-2 p-4 flex items-center justify-center min-h-24 bg-blue-50 cursor-pointer" onClick={()=>setOpenAddressPage(true)}>
               <p>Add address</p>
             </div>
           </div>
         </div>
-        <div className="p-4 bg-white">
+        <div className="p-2 lg:p-4 bg-white">
           <h1 className="font-semibold">Summary</h1>
           <div className="text-sm my-2 p-4">
             <div className="font-semibold">Bill details</div>

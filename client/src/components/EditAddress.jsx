@@ -7,19 +7,29 @@ import {toast} from 'react-toastify'
 import { useDispatch, useSelector } from 'react-redux';
 import { useGlobalContext } from '../provider/GlobalProvider';
 
-const AddAddress = ({close}) => {
-    const { register, handleSubmit } = useForm();
+const EditAddress = ({close,address}) => {
+    const { register, handleSubmit } = useForm({
+        defaultValues: {
+            _id: address?._id,
+            addressLine: address?.addressLine,
+            city: address?.city,
+            state: address?.state,
+            pincode: address?.pincode,
+            country: address?.country,
+            mobile: address?.mobile
+          }
+    });
     const {fetchAddress} = useGlobalContext()
 
     const submitHandler = async(data)=>{
         try {
             const response = await Axios({
-                ...summery.createAddress,
+                ...summery.updateAddress,
                 data: data
             })
             const { data : responseData } = response
             if(responseData?.success){
-                toast.success('Address added successfully')
+                toast.success('Address Updated successfully')
                 fetchAddress()
                 close()
             }
@@ -34,7 +44,7 @@ const AddAddress = ({close}) => {
     <section className='fixed top-0 bottom-0 left-0 right-0 bg-neutral-700 z-50 bg-opacity-60 flex justify-center items-center'>
         <div className='max-w-md w-full bg-white p-2'>
             <div className='flex justify-between p-2 shadow'>
-                <h1 className='font-semibold'>Add address</h1>
+                <h1 className='font-semibold'>Edit address</h1>
                 <div onClick={close}><IoClose size={25}/></div>
             </div>
             <div className='my-2 text-sm p-2'>
@@ -71,4 +81,4 @@ const AddAddress = ({close}) => {
   )
 }
 
-export default AddAddress
+export default EditAddress
