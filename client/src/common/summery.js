@@ -1,4 +1,3 @@
-import { deleteCategory } from "../../../server/src/controllers/category.controller";
 
 const summery = {
     register:{
@@ -139,6 +138,14 @@ const summery = {
     },
     disableAddress:{
         url:'/api/v1/address/delete',
+        method:'post'
+    },
+    createOrder:{
+        url:'/api/v1/order/create',
+        method:'post'
+    },
+    createPaymentOrder:{
+        url:'/api/v1/order/create-payment-order',
         method:'post'
     }
 }

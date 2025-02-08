@@ -27,6 +27,10 @@ const orderSchema = new Schema({
         type:String,
         default:""
     },
+    deliveryAddress:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"Address"
+    },
     subTotalAmount:{
         type:Number,
         default:0

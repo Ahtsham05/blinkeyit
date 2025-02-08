@@ -18,7 +18,7 @@ app.use(morgan())
 app.use(helmet({
     crossOriginResourcePolicy: false
 }))
-
+  
 // Routers
 import userRouter from './routes/user.route.js'
 import imageRouter from './routes/image.route.js'
@@ -27,6 +27,7 @@ import subCategoryRoute from './routes/subCategory.route.js'
 import productRoute from './routes/product.route.js'
 import cartProductRoute from './routes/cartProduct.route.js'
 import addressRoute from './routes/address.route.js';
+import orderRouter from './routes/order.route.js';
 
 app.use("/api/v1/users",userRouter)
 app.use("/api/v1",imageRouter)
@@ -35,5 +36,6 @@ app.use("/api/v1/sub-category",subCategoryRoute)
 app.use("/api/v1/product",productRoute)
 app.use("/api/v1/cart",cartProductRoute)
 app.use("/api/v1/address",addressRoute)
+app.use("/api/v1/order",orderRouter)
 
 export default app;
