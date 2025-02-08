@@ -129,34 +129,72 @@ const OnlinePaymentOrder = asyncHandler(async (req, res) => {
     }
 });
 
-// const getOrderProductItems = async ({lineItems,userId,addressId,paymentId,payment_status})=>{
-//     const productList = []
-//     for (const item of lineItems) {
-        
-//     }
-// }
+const getOrderProductItems = async ({lineItems,userId,addressId,paymentId,payment_status})=>{
+    const productList = []
+
+    for (const item of lineItems.data) {
+        const product = await Stripe.products.retrieve(item.price.product)
+        const payload =  {
+                userId : userId,
+                orderId : "ORD"+ new mongoose.Types.ObjectId(),
+                productId: product?.metadata?.productId,
+                productDetails:{
+                    name: product?.name,
+                    image: product?.images,
+                },
+                paymentId:paymentId,
+                paymentStatus:payment_status,
+                deliveryAddress : addressId,
+                subTotalAmount : Number(item.amount_subtotal / 100),
+                totalAmount : Number(item.amount_total / 100),
+            }
+            productList.push(payload)
+    }
+    return productList
+}
 
 async function webHookOrder(req,res){
     const event = req.body;
     const webhookSecret = process.env.WEBHOOK_SECRET_KEY
-    // console.log("webhook event",event)
-  // Handle the event
+
+    // Handle the event
   switch (event.type) {
     case 'checkout.session.completed':
-      const paymentIntent = event.data.object;
-      const lineItems = await Stripe.checkout.sessions.listLineItems(paymentIntent.id)
-      const userId = paymentIntent.metadata.userId;
-      const addressId = paymentIntent.metadata.addressId;
-      console.log("lineItems",lineItems)
-        // const orderProduct = await getOrderProductItems(
-        // {
-        //     lineItems : lineItems,
-        //     userId : userId,
-        //     addressId : paymentIntent.metadata.addressId,
-        //     paymentId  : paymentIntent.payment_intent,
-        //     payment_status : paymentIntent.payment_status,
-        // }
-        // )
+        const paymentIntent = event.data.object;
+        const lineItems = await Stripe.checkout.sessions.listLineItems(paymentIntent.id)
+        const userId = paymentIntent.metadata.userId;
+        const addressId = paymentIntent.metadata.addressId;
+
+        const orderProduct = await getOrderProductItems({
+            lineItems : lineItems,
+            userId : userId,
+            addressId : paymentIntent.metadata.addressId,
+            paymentId  : paymentIntent.payment_intent,
+            payment_status : paymentIntent.payment_status,
+        })
+
+        const createdOrder = await Order.insertMany(orderProduct)
+        if(!createdOrder){
+            return res.status(400).json(
+                new apiResponse(400,"Order Not Created")
+            )
+        }
+
+        if(Boolean(createdOrder[0])){
+            const clearUserShopingCart = await User.updateOne({userId},{shoppingCart:[]})
+            if(!clearUserShopingCart){
+                return res.status(400).json(
+                    new apiResponse(400,"User Cart Not Cleared")
+                )
+            }
+            const deleteFromCartProduct = await cartProduct.deleteMany({userId})
+            if(!deleteFromCartProduct){
+                return res.status(400).json(
+                    new apiResponse(400,"Cart Product Not Deleted")
+                )
+            }
+        }
+        
       break;
     // ... handle other event types
     default:

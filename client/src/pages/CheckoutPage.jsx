@@ -60,7 +60,7 @@ const CheckoutPage = () => {
       })
 
       const {data : responseData} = response
-      console.log(responseData)
+      // console.log(responseData)
       stripe.redirectToCheckout({sessionId:responseData?.id})
 
       if(fetchCartItems){
