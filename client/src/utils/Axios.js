@@ -1,7 +1,7 @@
 import axios from 'axios'
 import summery from '../common/summery'
 
-const baseUrl = 'http://localhost:3000'
+const baseUrl = import.meta.env.VITE_BACKEND_URL
 
 const Axios = axios.create({
     baseURL : baseUrl,
