@@ -32,7 +32,7 @@ const Home = () => {
             <img src={mobileBanner} alt="Banner image" className='w-full h-full block md:hidden' />
         </div>
         {/* Product Categories */}
-        <div className='grid grid-cols-5 md:grid-cols-8 lg:grid-cols-10 gap-1 md:gap-2 rounded p-2'>
+        <div className='grid grid-cols-7 md:grid-cols-8 lg:grid-cols-10 gap-1 md:gap-2 rounded p-2'>
           {
             loading ? (
                 <>
