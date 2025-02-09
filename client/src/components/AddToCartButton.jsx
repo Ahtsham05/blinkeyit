@@ -5,6 +5,7 @@ import {toast} from 'react-toastify'
 import { useSelector } from 'react-redux'
 import { useGlobalContext } from '../provider/GlobalProvider.jsx'
 import { FaPlus,FaMinus } from "react-icons/fa6";
+import { useNavigate } from 'react-router-dom'
 
 const AddToCartButton = ({product}) => {
     const cartItem = useSelector(state => state.cart.cartItems)
@@ -12,6 +13,7 @@ const AddToCartButton = ({product}) => {
     const [productDetails,setProductDetails] = useState()
     const [qty,setQty] =useState(0)
     const { fetchCartItems,updateCartHandler,deleteCartItem } = useGlobalContext()
+    const navigate = useNavigate()
 
     const addToCartHandler = async(e)=>{
         e.preventDefault()
@@ -30,7 +32,13 @@ const AddToCartButton = ({product}) => {
                 toast.success(responseData?.message)
             }
         } catch (error) {
-            toast.error(error?.response?.data?.message)
+
+            if(error?.response?.status === 401){
+                navigate("/login")
+                toast.error("Please Login!")
+            }else{
+                toast.error(error?.response?.data?.message)
+            }
             if(error?.response?.status === 500){
                 toast.error(error?.response?.message)
             }

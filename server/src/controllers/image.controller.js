@@ -18,7 +18,7 @@ const uploadImage = async (req,res)=>{
             new apiResponse(200,"File uploaded successfully",uploadImageData)
         )
     } catch (error) {
-        throw new apiError(500,"Error image uploading",error)
+        return new apiResponse(500,"Internal Server Error Uploading File",error)
     }
 }
 

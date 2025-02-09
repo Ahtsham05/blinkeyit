@@ -44,7 +44,7 @@ const Search = () => {
                     <input 
                         type="text" 
                         autoFocus 
-                        className='h-full w-full outline-none' 
+                        className='h-full w-full outline-none bg-blue-50' 
                         placeholder='Search For atta , dal and more' 
                         onChange={searchChangeHandler}
                         value={search}
